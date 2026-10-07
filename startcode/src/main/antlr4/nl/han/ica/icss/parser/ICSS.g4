@@ -44,6 +44,31 @@ ASSIGNMENT_OPERATOR: ':=';
 
 
 
+
 //--- PARSER: ---
-stylesheet: EOF;
+
+
+
+variable_id: CAPITAL_IDENT;
+oparator: MUL | PLUS | MIN;
+bool: TRUE | FALSE;
+
+literals: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
+variable: variable_id ASSIGNMENT_OPERATOR literals SEMICOLON;
+
+
+selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
+
+declaration: LOWER_IDENT COLON (variable_id | literals | sum) SEMICOLON;
+
+sum: (variable_id | literals) (oparator sum)?;
+
+rule: selector OPEN_BRACE (declaration | if_statement)+ CLOSE_BRACE;
+
+
+statement: OPEN_BRACE (declaration | if_statement)+ CLOSE_BRACE;
+if_statement: IF BOX_BRACKET_OPEN variable_id BOX_BRACKET_CLOSE statement | else_statement;
+else_statement: ELSE statement;
+
+stylesheet: variable* rule* ;
 
