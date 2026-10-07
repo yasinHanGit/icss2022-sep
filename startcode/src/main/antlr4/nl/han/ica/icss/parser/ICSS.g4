@@ -9,7 +9,7 @@ BOX_BRACKET_OPEN: '[';
 BOX_BRACKET_CLOSE: ']';
 
 
-//Literals
+//literal
 TRUE: 'TRUE';
 FALSE: 'FALSE';
 PIXELSIZE: [0-9]+ 'px';
@@ -48,27 +48,28 @@ ASSIGNMENT_OPERATOR: ':=';
 //--- PARSER: ---
 
 
+propertyName: 'background-color' | 'color' | 'width' | 'height';
 
-variable_id: CAPITAL_IDENT;
+variableReference: CAPITAL_IDENT;
 oparator: MUL | PLUS | MIN;
 bool: TRUE | FALSE;
 
-literals: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
-variable: variable_id ASSIGNMENT_OPERATOR literals SEMICOLON;
+literal: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
 
 
 selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
-declaration: LOWER_IDENT COLON (variable_id | literals | sum) SEMICOLON;
+declaration: propertyName COLON (variableReference | literal | expression) SEMICOLON;
 
-sum: (variable_id | literals) (oparator sum)?;
+expression: (variableReference | literal) (oparator expression)?;
 
-rule: selector OPEN_BRACE (declaration | if_statement)+ CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
 
 
-statement: OPEN_BRACE (declaration | if_statement)+ CLOSE_BRACE;
-if_statement: IF BOX_BRACKET_OPEN variable_id BOX_BRACKET_CLOSE statement | else_statement;
-else_statement: ELSE statement;
+statement: OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
+ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE statement | elseClause;
+elseClause: ELSE statement;
 
-stylesheet: variable* rule* ;
+stylesheet: variableAssignment* styleRule* ;
 
