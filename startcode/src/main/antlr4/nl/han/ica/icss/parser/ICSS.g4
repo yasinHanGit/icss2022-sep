@@ -1,8 +1,5 @@
 grammar ICSS;
 
-@header {
-    package nl.han.ica;
-}
 
 //--- LEXER: ---
 

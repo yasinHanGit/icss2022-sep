@@ -3,7 +3,7 @@ package nl.han.ica.icss.parser;
 import java.util.Stack;
 
 
-import nl.han.ica.ICSSBaseListener;
+import nl.han.ica.icss.parser.ICSSBaseListener;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
