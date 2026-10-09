@@ -2,7 +2,7 @@ package nl.han.ica.datastructures;
 
 import java.util.ArrayList;
 
-public class HanQueue<T> implements IHANQueue<T>{
+public class HANQueue<T> implements IHANQueue<T>{
     private ArrayList<T> list = new ArrayList<>();
 
     @Override

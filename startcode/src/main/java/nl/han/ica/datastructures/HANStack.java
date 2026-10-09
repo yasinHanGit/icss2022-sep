@@ -2,11 +2,11 @@ package nl.han.ica.datastructures;
 
 import java.util.ArrayList;
 
-public class HanStack<T> implements IHANStack<T> {
+public class HANStack<T> implements IHANStack<T> {
 
     private ArrayList<T> list;
 
-    public HanStack(){
+    public HANStack(){
         list = new ArrayList<>();
     }
 

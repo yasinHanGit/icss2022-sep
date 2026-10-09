@@ -1,6 +1,11 @@
 grammar ICSS;
 
+@header {
+    package nl.hah.ica.icss.parser;
+}
+
 //--- LEXER: ---
+
 
 // IF support:
 IF: 'if';
