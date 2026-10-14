@@ -37,6 +37,7 @@ public class ASTListener extends ICSSBaseListener {
     }
 
 
+
     @Override
     public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
         currentContainer.push(new Stylesheet());
@@ -176,7 +177,7 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override
     public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
-        ElseClause elseClause = (ElseClause) currentContainer;
+        ElseClause elseClause = (ElseClause) currentContainer.pop();
         currentContainer.peek().addChild(elseClause);
     }
 
