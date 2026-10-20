@@ -123,23 +123,27 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 
+
     @Override
-    public void enterOparator(ICSSParser.OparatorContext ctx) {
-        Operation operation = null;
-
-        if (ctx.MUL() != null) operation = new MultiplyOperation();
-        if (ctx.PLUS() != null) operation = new AddOperation();
-        if (ctx.MIN() != null) operation = new SubtractOperation();
-
-        currentContainer.push(operation);
-
+    public void enterAddOperation(ICSSParser.AddOperationContext ctx) {
+        currentContainer.push(new AddOperation());
     }
 
+    @Override
+    public void exitAddOperation(ICSSParser.AddOperationContext ctx) {
+        AddOperation addOperation = (AddOperation) currentContainer.pop();
+        currentContainer.peek().addChild(addOperation);
+    }
 
     @Override
-    public void exitOparator(ICSSParser.OparatorContext ctx) {
-        Operation operation = (Operation) currentContainer.pop();
-        currentContainer.peek().addChild(operation);
+    public void enterMulOperation(ICSSParser.MulOperationContext ctx) {
+        currentContainer.push(new MultiplyOperation());
+    }
+
+    @Override
+    public void exitMulOperation(ICSSParser.MulOperationContext ctx) {
+        MultiplyOperation multiplyOperation = (MultiplyOperation) currentContainer.pop();
+        currentContainer.peek().addChild(multiplyOperation);
     }
 
     @Override
