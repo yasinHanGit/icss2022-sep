@@ -36,46 +36,63 @@ public class Checker {
                 checkNodes(((ElseClause) node).body);
             }
         }
-        for (int i = 0; i < variableTypes.getSize(); i++) {
-            System.out.println(variableTypes.get(i));
-        }
-
     }
 
     private void assignVariable(VariableAssignment variableAssignment) {
         var hashMap = new HashMap<String, ExpressionType>();
 
-        if (variableAssignment.expression instanceof BoolLiteral) {
-            hashMap.put(variableAssignment.name.name, ExpressionType.BOOL);
-        } else if (variableAssignment.expression instanceof ScalarLiteral) {
-            hashMap.put(variableAssignment.name.name, ExpressionType.SCALAR);
-        } else if (variableAssignment.expression instanceof PercentageLiteral) {
-            hashMap.put(variableAssignment.name.name, ExpressionType.PERCENTAGE);
-        } else if (variableAssignment.expression instanceof PixelLiteral) {
-            hashMap.put(variableAssignment.name.name, ExpressionType.PIXEL);
-        } else if (variableAssignment.expression instanceof ColorLiteral) {
-            hashMap.put(variableAssignment.name.name, ExpressionType.COLOR);
-        } else {
-            hashMap.put(variableAssignment.name.name, ExpressionType.UNDEFINED);
+        for (int i = 0; i < variableTypes.getSize(); i++){
+            if (variableTypes.get(i).containsKey(variableAssignment.name.name)){
+                variableAssignment.setError("Variable: \""
+                        + variableAssignment.name.name+"\" already exists: ");
+                return;
+            }
         }
-
-
+        hashMap.put(variableAssignment.name.name, getExpressionType(variableAssignment.expression));
         variableTypes.addFirst(hashMap);
     }
+
 
     private void checkDeclaration(Declaration declaration) {
         if (declaration.property == null || declaration.expression == null) return;
 
+        ExpressionType expressionType = getExpressionType(declaration.expression);
+        String propertyName = declaration.property.name;
 
-        if ((declaration.property.name.equals("color") || declaration.property.name.equals("background-color")) && !(declaration.expression instanceof ColorLiteral)) {
+        if (declaration.expression instanceof VariableReference) {
+
+            for (int i = 0; i < variableTypes.getSize(); i++) {
+                if (variableTypes.get(i).containsKey(((VariableReference) declaration.expression).name)) {
+                    expressionType = variableTypes.get(i).get(((VariableReference) declaration.expression).name);
+                }
+            }
+        }
+        if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
+                !(expressionType.equals(ExpressionType.COLOR))) {
             declaration.setError("Invalid value: "
                     + declaration.expression);
-        } else if ((declaration.property.name.equals("width") || declaration.property.name.equals("height")) &&
-                (!(declaration.expression instanceof PixelLiteral)) || (declaration.expression instanceof PercentageLiteral)) {
+        } else if ((propertyName.equals("width") || propertyName.equals("height")) &&
+                (!(expressionType.equals(ExpressionType.PIXEL) || expressionType.equals(ExpressionType.PERCENTAGE)))) {
             declaration.setError("Invalid value: "
                     + declaration.expression);
         }
-
-
     }
+
+
+    private ExpressionType getExpressionType(Expression expression) {
+        if (expression instanceof BoolLiteral) {
+            return ExpressionType.BOOL;
+        } else if (expression instanceof ScalarLiteral) {
+            return ExpressionType.SCALAR;
+        } else if (expression instanceof PercentageLiteral) {
+            return ExpressionType.PERCENTAGE;
+        } else if (expression instanceof PixelLiteral) {
+            return ExpressionType.PIXEL;
+        } else if (expression instanceof ColorLiteral) {
+            return ExpressionType.COLOR;
+        } else {
+            return ExpressionType.UNDEFINED;
+        }
+    }
+
 }
