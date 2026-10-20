@@ -42,7 +42,26 @@ public class Checker {
 
     }
 
+    private void assignVariable(VariableAssignment variableAssignment) {
+        var hashMap = new HashMap<String, ExpressionType>();
 
+        if (variableAssignment.expression instanceof BoolLiteral) {
+            hashMap.put(variableAssignment.name.name, ExpressionType.BOOL);
+        } else if (variableAssignment.expression instanceof ScalarLiteral) {
+            hashMap.put(variableAssignment.name.name, ExpressionType.SCALAR);
+        } else if (variableAssignment.expression instanceof PercentageLiteral) {
+            hashMap.put(variableAssignment.name.name, ExpressionType.PERCENTAGE);
+        } else if (variableAssignment.expression instanceof PixelLiteral) {
+            hashMap.put(variableAssignment.name.name, ExpressionType.PIXEL);
+        } else if (variableAssignment.expression instanceof ColorLiteral) {
+            hashMap.put(variableAssignment.name.name, ExpressionType.COLOR);
+        } else {
+            hashMap.put(variableAssignment.name.name, ExpressionType.UNDEFINED);
+        }
+
+
+        variableTypes.addFirst(hashMap);
+    }
 
     private void checkDeclaration(Declaration declaration) {
         if (declaration.property == null || declaration.expression == null) return;
