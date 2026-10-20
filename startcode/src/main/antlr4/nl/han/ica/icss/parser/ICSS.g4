@@ -53,25 +53,26 @@ ASSIGNMENT_OPERATOR: ':=';
 propertyName: 'background-color' | 'color' | 'width' | 'height';
 
 variableReference: CAPITAL_IDENT;
-oparator: MUL | PLUS | MIN;
 bool: TRUE | FALSE;
 
 literal: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
 variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
 
-
 selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
-declaration: propertyName COLON (variableReference | literal | expression) SEMICOLON;
+declaration: propertyName COLON expression SEMICOLON;
 
-expression: (variableReference | literal) (oparator expression)?;
+expression: addOperation | mulOperation | variableReference | literal;
 
 styleRule: selector OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
 
+addOperation: addOperation (PLUS | MIN) (operand | mulOperation) | (operand | mulOperation) (PLUS | MIN) (operand | mulOperation);
 
+mulOperation: mulOperation MUL operand | operand MUL operand;
+
+operand: literal | variableReference;
 statement: OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
 ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE statement elseClause?;
 elseClause: ELSE statement;
 
 stylesheet: variableAssignment* styleRule* ;
-
