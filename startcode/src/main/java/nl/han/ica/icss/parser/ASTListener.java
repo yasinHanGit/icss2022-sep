@@ -85,9 +85,9 @@ public class ASTListener extends ICSSBaseListener {
     public void enterSelector(ICSSParser.SelectorContext ctx) {
         Selector selector = null;
 
-        if (ctx.ID_IDENT() != null) selector = new TagSelector(ctx.ID_IDENT().getText());
+        if (ctx.ID_IDENT() != null) selector = new IdSelector(ctx.ID_IDENT().getText());
         if (ctx.LOWER_IDENT() != null) selector = new TagSelector(ctx.LOWER_IDENT().getText());
-        if (ctx.CLASS_IDENT() != null) selector = new TagSelector(ctx.CLASS_IDENT().getText());
+        if (ctx.CLASS_IDENT() != null) selector = new ClassSelector(ctx.CLASS_IDENT().getText());
 
         currentContainer.push(selector);
 
@@ -95,7 +95,7 @@ public class ASTListener extends ICSSBaseListener {
 
     @Override
     public void exitSelector(ICSSParser.SelectorContext ctx) {
-        TagSelector selector = (TagSelector) currentContainer.pop();
+        Selector selector = (Selector) currentContainer.pop();
         currentContainer.peek().addChild(selector);
     }
 
@@ -110,7 +110,8 @@ public class ASTListener extends ICSSBaseListener {
 		currentContainer.peek().addChild(declaration);
 	}
 
-	@Override
+
+    @Override
 	public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {
 		currentContainer.push(new PropertyName(ctx.getText()));
 	}
@@ -133,6 +134,7 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.push(operation);
 
     }
+
 
     @Override
     public void exitOparator(ICSSParser.OparatorContext ctx) {
