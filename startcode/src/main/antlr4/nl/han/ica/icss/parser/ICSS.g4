@@ -64,14 +64,14 @@ declaration: propertyName COLON expression SEMICOLON;
 
 expression: addOperation | mulOperation | variableReference | literal;
 
-styleRule: selector OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
+styleRule: selector OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;
 
 addOperation: addOperation (PLUS | MIN) (operand | mulOperation) | (operand | mulOperation) (PLUS | MIN) (operand | mulOperation);
 
 mulOperation: mulOperation MUL operand | operand MUL operand;
 
 operand: literal | variableReference;
-statement: OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
+statement: OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;
 ifClause: IF BOX_BRACKET_OPEN (variableReference | bool) BOX_BRACKET_CLOSE statement elseClause?;
 elseClause: ELSE statement;
 
