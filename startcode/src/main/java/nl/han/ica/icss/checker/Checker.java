@@ -4,6 +4,7 @@ import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
@@ -22,11 +23,11 @@ public class Checker {
         for (ASTNode node : nodes) {
             if (node instanceof VariableAssignment) {
                 assignVariable((VariableAssignment) node);
-            } else if (node instanceof Declaration) {
+            }else if (node instanceof Declaration) {
                 checkDeclaration((Declaration) node);
             } else if (node instanceof Stylerule) {
                 checkNodes(((Stylerule) node).body);
-            } else if (node instanceof IfClause) {
+            }  else if (node instanceof IfClause) {
                 IfClause ifClause = (IfClause) node;
                 boolCheck(ifClause.conditionalExpression);
                 checkNodes(ifClause.body);
@@ -39,13 +40,13 @@ public class Checker {
         }
     }
 
-    private void boolCheck(Expression expression){
-        if (!getExpressionType(expression).equals(ExpressionType.BOOL)){
+
+    private void boolCheck(Expression expression) {
+        if (!getExpressionType(expression).equals(ExpressionType.BOOL)) {
             expression.setError(((VariableReference) expression).name +
                     " : Required type boolean. Provided type: " + getExpressionType(expression));
         }
     }
-
 
     private void assignVariable(VariableAssignment variableAssignment) {
         var hashMap = new HashMap<String, ExpressionType>();
@@ -55,9 +56,9 @@ public class Checker {
             variableAssignment.setError("Invalid value: " + variableName);
             return;
         }
-        for (int i = 0; i < variableTypes.getSize(); i++){
-            if (variableTypes.get(i).containsKey(variableName)){
-                variableAssignment.setError("Variable: \"" + variableName+"\" already exists");
+        for (int i = 0; i < variableTypes.getSize(); i++) {
+            if (variableTypes.get(i).containsKey(variableName)) {
+                variableAssignment.setError("Variable: \"" + variableName + "\" already exists");
                 return;
             }
         }
@@ -71,7 +72,9 @@ public class Checker {
         ExpressionType expressionType = getExpressionType(declaration.expression);
         String propertyName = declaration.property.name;
 
-        if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
+        if (declaration.expression instanceof Operation) {
+            operationCheck((Operation) declaration.expression);
+        } else if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
                 !(expressionType.equals(ExpressionType.COLOR))) {
             declaration.setError("Invalid value: " + declaration.expression);
         } else if ((propertyName.equals("width") || propertyName.equals("height")) &&
@@ -80,10 +83,18 @@ public class Checker {
         }
     }
 
+    private void operationCheck(Operation operation) {
+        for (var child : operation.getChildren()) {
+            if (child instanceof ColorLiteral) {
+                operation.setError("Invalid input: " + child);
+            }
+        }
+    }
+
     private ExpressionType getExpressionType(Expression expression) {
-        if (expression instanceof VariableReference){
+        if (expression instanceof VariableReference) {
             return getVariableExpression(expression);
-        }else if (expression instanceof BoolLiteral) {
+        } else if (expression instanceof BoolLiteral) {
             return ExpressionType.BOOL;
         } else if (expression instanceof ScalarLiteral) {
             return ExpressionType.SCALAR;
@@ -107,8 +118,7 @@ public class Checker {
         expression.setError("Variable: \"" + ((VariableReference) expression).name + "\" does not exist");
 
         return ExpressionType.UNDEFINED;
-      }
-
+    }
 
 
 }
