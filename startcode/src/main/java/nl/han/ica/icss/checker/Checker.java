@@ -50,8 +50,10 @@ public class Checker {
     }
 
     private void assignVariable(VariableAssignment variableAssignment) {
-        var hashMap = new HashMap<String, ExpressionType>();
         var variableName = variableAssignment.name.name;
+        var hashMap = new HashMap<String, ExpressionType>();
+        hashMap.put(variableName, getExpressionType(variableAssignment.expression));
+
         if (variableName.equals("TRUE") || variableName.equals("FALSE") ||
                 variableName.equals("ONVOLDOENDE")) {
             variableAssignment.setError("Invalid value: " + variableName);
@@ -59,11 +61,10 @@ public class Checker {
         }
         for (int i = 0; i < variableTypes.getSize(); i++) {
             if (variableTypes.get(i).containsKey(variableName)) {
-                variableAssignment.setError("Variable: \"" + variableName + "\" already exists");
+                variableTypes.insert(i, hashMap);
                 return;
             }
         }
-        hashMap.put(variableName, getExpressionType(variableAssignment.expression));
         variableTypes.addFirst(hashMap);
     }
 
