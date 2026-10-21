@@ -5,6 +5,7 @@ import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
 import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
@@ -73,6 +74,10 @@ public class Checker {
         String propertyName = declaration.property.name;
 
         if (declaration.expression instanceof Operation) {
+            if (propertyName.equals("color") || propertyName.equals("background-color")){
+                declaration.setError("Invalid value: operations on " + propertyName + " are not possible");
+                return;
+            }
             operationCheck((Operation) declaration.expression);
         } else if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
                 !(expressionType.equals(ExpressionType.COLOR))) {
@@ -87,7 +92,21 @@ public class Checker {
         for (var child : operation.getChildren()) {
             if (child instanceof ColorLiteral) {
                 operation.setError("Invalid input: " + child);
+                return;
             }
+        }
+//        if (operation.lhs instanceof ScalarLiteral && operation.rhs instanceof ScalarLiteral) {
+//            operation.setError("Invalid input: no type specified");
+//            return;
+//        }
+        if (operation instanceof AddOperation &&
+                !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs))){
+            operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " are not from the same type ");
+            return;
+        }
+        if (operation instanceof MultiplyOperation &&
+                !(operation.lhs instanceof ScalarLiteral || operation.rhs instanceof ScalarLiteral)){
+            operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " can not be multiplied ");
         }
     }
 
