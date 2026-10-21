@@ -22,12 +22,6 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableReference(ICSSParser.VariableReferenceContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ICSSParser#oparator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOparator(ICSSParser.OparatorContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ICSSParser#bool}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -69,6 +63,24 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStyleRule(ICSSParser.StyleRuleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#addOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddOperation(ICSSParser.AddOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#mulOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMulOperation(ICSSParser.MulOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ICSSParser#operand}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOperand(ICSSParser.OperandContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#statement}.
 	 * @param ctx the parse tree

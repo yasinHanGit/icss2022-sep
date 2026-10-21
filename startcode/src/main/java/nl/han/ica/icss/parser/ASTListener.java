@@ -187,5 +187,14 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.peek().addChild(elseClause);
     }
 
+    @Override
+    public void enterBool(nl.han.ica.icss.parser.ICSSParser.BoolContext ctx) {
+        currentContainer.push(new BoolLiteral(ctx.getText()));
+    }
 
+    @Override
+    public void exitBool(nl.han.ica.icss.parser.ICSSParser.BoolContext ctx) {
+        BoolLiteral boolLiteral = (BoolLiteral) currentContainer.pop();
+        currentContainer.peek().addChild(boolLiteral);
+    }
 }

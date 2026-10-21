@@ -72,7 +72,7 @@ mulOperation: mulOperation MUL operand | operand MUL operand;
 
 operand: literal | variableReference;
 statement: OPEN_BRACE (declaration | ifClause)+ CLOSE_BRACE;
-ifClause: IF BOX_BRACKET_OPEN variableReference BOX_BRACKET_CLOSE statement elseClause?;
+ifClause: IF BOX_BRACKET_OPEN (variableReference | bool) BOX_BRACKET_CLOSE statement elseClause?;
 elseClause: ELSE statement;
 
 stylesheet: variableAssignment* styleRule* ;

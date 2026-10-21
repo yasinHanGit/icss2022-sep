@@ -28,6 +28,7 @@ public class Checker {
                 checkNodes(((Stylerule) node).body);
             } else if (node instanceof IfClause) {
                 IfClause ifClause = (IfClause) node;
+                boolCheck(ifClause.conditionalExpression);
                 checkNodes(ifClause.body);
                 if (ifClause.elseClause != null) {
                     checkNodes(ifClause.elseClause.body);
@@ -38,20 +39,31 @@ public class Checker {
         }
     }
 
+    private void boolCheck(Expression expression){
+        if (!getExpressionType(expression).equals(ExpressionType.BOOL)){
+            expression.setError(((VariableReference) expression).name +
+                    " : Required type boolean. Provided type: " + getExpressionType(expression));
+        }
+    }
+
+
     private void assignVariable(VariableAssignment variableAssignment) {
         var hashMap = new HashMap<String, ExpressionType>();
-
+        var variableName = variableAssignment.name.name;
+        if (variableName.equals("TRUE") || variableName.equals("FALSE") ||
+                variableName.equals("ONVOLDOENDE")) {
+            variableAssignment.setError("Invalid value: " + variableName);
+            return;
+        }
         for (int i = 0; i < variableTypes.getSize(); i++){
-            if (variableTypes.get(i).containsKey(variableAssignment.name.name)){
-                variableAssignment.setError("Variable: \""
-                        + variableAssignment.name.name+"\" already exists: ");
+            if (variableTypes.get(i).containsKey(variableName)){
+                variableAssignment.setError("Variable: \"" + variableName+"\" already exists");
                 return;
             }
         }
-        hashMap.put(variableAssignment.name.name, getExpressionType(variableAssignment.expression));
+        hashMap.put(variableName, getExpressionType(variableAssignment.expression));
         variableTypes.addFirst(hashMap);
     }
-
 
     private void checkDeclaration(Declaration declaration) {
         if (declaration.property == null || declaration.expression == null) return;
@@ -59,28 +71,19 @@ public class Checker {
         ExpressionType expressionType = getExpressionType(declaration.expression);
         String propertyName = declaration.property.name;
 
-        if (declaration.expression instanceof VariableReference) {
-
-            for (int i = 0; i < variableTypes.getSize(); i++) {
-                if (variableTypes.get(i).containsKey(((VariableReference) declaration.expression).name)) {
-                    expressionType = variableTypes.get(i).get(((VariableReference) declaration.expression).name);
-                }
-            }
-        }
         if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
                 !(expressionType.equals(ExpressionType.COLOR))) {
-            declaration.setError("Invalid value: "
-                    + declaration.expression);
+            declaration.setError("Invalid value: " + declaration.expression);
         } else if ((propertyName.equals("width") || propertyName.equals("height")) &&
                 (!(expressionType.equals(ExpressionType.PIXEL) || expressionType.equals(ExpressionType.PERCENTAGE)))) {
-            declaration.setError("Invalid value: "
-                    + declaration.expression);
+            declaration.setError("Invalid value: " + declaration.expression);
         }
     }
 
-
     private ExpressionType getExpressionType(Expression expression) {
-        if (expression instanceof BoolLiteral) {
+        if (expression instanceof VariableReference){
+            return getVariableExpression(expression);
+        }else if (expression instanceof BoolLiteral) {
             return ExpressionType.BOOL;
         } else if (expression instanceof ScalarLiteral) {
             return ExpressionType.SCALAR;
@@ -94,5 +97,18 @@ public class Checker {
             return ExpressionType.UNDEFINED;
         }
     }
+
+    private ExpressionType getVariableExpression(Expression expression) {
+        for (int i = 0; i < variableTypes.getSize(); i++) {
+            if (variableTypes.get(i).containsKey(((VariableReference) expression).name)) {
+                return variableTypes.get(i).get(((VariableReference) expression).name);
+            }
+        }
+        expression.setError("Variable: \"" + ((VariableReference) expression).name + "\" does not exist");
+
+        return ExpressionType.UNDEFINED;
+      }
+
+
 
 }
