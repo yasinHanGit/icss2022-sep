@@ -17,6 +17,7 @@ public class Checker {
 
     public void check(AST ast) {
         variableTypes = new HANLinkedList<>();
+        variableTypes.addFirst(new HashMap<>());
         checkNodes(ast.root.getChildren());
     }
 
@@ -24,23 +25,30 @@ public class Checker {
         for (ASTNode node : nodes) {
             if (node instanceof VariableAssignment) {
                 assignVariable((VariableAssignment) node);
-            }else if (node instanceof Declaration) {
+            } else if (node instanceof Declaration) {
                 checkDeclaration((Declaration) node);
             } else if (node instanceof Stylerule) {
+                variableTypes.addFirst(new HashMap<>());
                 checkNodes(((Stylerule) node).body);
-            }  else if (node instanceof IfClause) {
+                variableTypes.removeFirst();
+            } else if (node instanceof IfClause) {
                 IfClause ifClause = (IfClause) node;
                 boolCheck(ifClause.conditionalExpression);
+                variableTypes.addFirst(new HashMap<>());
                 checkNodes(ifClause.body);
+                variableTypes.removeFirst();
                 if (ifClause.elseClause != null) {
+                    variableTypes.addFirst(new HashMap<>());
                     checkNodes(ifClause.elseClause.body);
+                    variableTypes.removeFirst();
                 }
             } else if (node instanceof ElseClause) {
+                variableTypes.addFirst(new HashMap<>());
                 checkNodes(((ElseClause) node).body);
+                variableTypes.removeFirst();
             }
         }
     }
-
 
     private void boolCheck(Expression expression) {
         if (!getExpressionType(expression).equals(ExpressionType.BOOL)) {
@@ -51,8 +59,7 @@ public class Checker {
 
     private void assignVariable(VariableAssignment variableAssignment) {
         var variableName = variableAssignment.name.name;
-        var hashMap = new HashMap<String, ExpressionType>();
-        hashMap.put(variableName, getExpressionType(variableAssignment.expression));
+        var expressionType = getExpressionType(variableAssignment.expression);
 
         if (variableName.equals("TRUE") || variableName.equals("FALSE") ||
                 variableName.equals("ONVOLDOENDE")) {
@@ -61,11 +68,12 @@ public class Checker {
         }
         for (int i = 0; i < variableTypes.getSize(); i++) {
             if (variableTypes.get(i).containsKey(variableName)) {
-                variableTypes.insert(i, hashMap);
+                variableTypes.get(i).put(variableName, expressionType);
                 return;
             }
         }
-        variableTypes.addFirst(hashMap);
+
+        variableTypes.getFirst().put(variableName, expressionType);
     }
 
     private void checkDeclaration(Declaration declaration) {
@@ -75,7 +83,7 @@ public class Checker {
         String propertyName = declaration.property.name;
 
         if (declaration.expression instanceof Operation) {
-            if (propertyName.equals("color") || propertyName.equals("background-color")){
+            if (propertyName.equals("color") || propertyName.equals("background-color")) {
                 declaration.setError("Invalid value: operations on " + propertyName + " are not possible");
                 return;
             }
@@ -101,12 +109,12 @@ public class Checker {
 //            return;
 //        }
         if (operation instanceof AddOperation &&
-                !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs))){
+                !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs))) {
             operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " are not from the same type ");
             return;
         }
         if (operation instanceof MultiplyOperation &&
-                !(operation.lhs instanceof ScalarLiteral || operation.rhs instanceof ScalarLiteral)){
+                !(operation.lhs instanceof ScalarLiteral || operation.rhs instanceof ScalarLiteral)) {
             operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " can not be multiplied ");
         }
     }
