@@ -38,9 +38,6 @@ public class Evaluator implements Transform {
                 variableValues.removeFirst();
             }else if (node instanceof Declaration) {
                 transformExpression(((Declaration) node).expression);
-            } else if (node instanceof Expression) {
-                System.out.println("hoi");
-
 //            } else if (node instanceof IfClause) {
 //                IfClause ifClause = (IfClause) node;
 //                variableValues.addFirst(new HashMap<>());
@@ -58,7 +55,7 @@ public class Evaluator implements Transform {
     }
 
     private Literal transformExpression(Expression expression) {
-        
+
         if (expression instanceof VariableReference) {
             expression = getVariableValue((VariableReference) expression);
         } else if (expression instanceof AddOperation) {
@@ -81,11 +78,11 @@ public class Evaluator implements Transform {
         }
 
         if (rsh instanceof ScalarLiteral) {
-            return new ScalarLiteral(((ScalarLiteral) rsh).value * ((ScalarLiteral) lsh).value);
+            return new ScalarLiteral(((ScalarLiteral) lsh).value * ((ScalarLiteral) rsh).value);
         } else if (rsh instanceof PixelLiteral) {
-            return new PixelLiteral(((PixelLiteral) rsh).value * ((PixelLiteral) lsh).value);
+            return new PixelLiteral(((ScalarLiteral) lsh).value * ((PixelLiteral) rsh).value);
         } else if (rsh instanceof PercentageLiteral) {
-            return new PercentageLiteral(((PercentageLiteral) rsh).value * ((PercentageLiteral) rsh).value);
+            return new PercentageLiteral(((ScalarLiteral) lsh).value * ((PercentageLiteral) rsh).value);
         }
 
         return null;
