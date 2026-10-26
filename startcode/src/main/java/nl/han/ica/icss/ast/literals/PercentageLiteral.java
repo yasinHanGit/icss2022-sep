@@ -1,11 +1,12 @@
 package nl.han.ica.icss.ast.literals;
 
+import nl.han.ica.icss.ast.IntLiteral;
 import nl.han.ica.icss.ast.Literal;
 
 import java.util.Objects;
 
-public class PercentageLiteral extends Literal {
-    public int value;
+public class PercentageLiteral extends IntLiteral {
+
 
     public PercentageLiteral(int value) {
         this.value = value;

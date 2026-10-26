@@ -4,12 +4,10 @@ import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
-import nl.han.ica.icss.ast.literals.PercentageLiteral;
-import nl.han.ica.icss.ast.literals.PixelLiteral;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
-import nl.han.ica.icss.ast.types.ExpressionType;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,17 +69,20 @@ public class Evaluator implements Transform {
         if (expression instanceof VariableReference) {
             expression = getVariableValue((VariableReference) expression);
         } else if (expression instanceof AddOperation) {
-            expression = getSumAddOperation((AddOperation) expression);
+            expression = getSumOperation((AddOperation) expression);
+        }else if (expression instanceof SubtractOperation) {
+            expression = getSumOperation((SubtractOperation) expression);
         } else if (expression instanceof MultiplyOperation) {
-            expression = getSumMulOperation((MultiplyOperation) expression);
+            expression = getSumOperation((MultiplyOperation) expression);
         }
         System.out.println(expression);
         return (Literal) expression;
     }
 
-    private Literal getSumMulOperation(MultiplyOperation expression) {
-        Literal lsh = transformExpression(expression.lhs);
-        Literal rsh = transformExpression(expression.rhs);
+
+    private Literal getSumOperation(Operation operation) {
+        Literal lsh = transformExpression(operation.lhs);
+        Literal rsh = transformExpression(operation.rhs);
 
         if (rsh instanceof ScalarLiteral) {
             var temp = lsh;
@@ -89,29 +90,13 @@ public class Evaluator implements Transform {
             rsh = temp;
         }
 
-        if (rsh instanceof ScalarLiteral) {
-            return new ScalarLiteral(((ScalarLiteral) lsh).value * ((ScalarLiteral) rsh).value);
-        } else if (rsh instanceof PixelLiteral) {
-            return new PixelLiteral(((ScalarLiteral) lsh).value * ((PixelLiteral) rsh).value);
-        } else if (rsh instanceof PercentageLiteral) {
-            return new PercentageLiteral(((ScalarLiteral) lsh).value * ((PercentageLiteral) rsh).value);
+        if (operation instanceof AddOperation) {
+            return new ScalarLiteral(((IntLiteral) lsh).value + ((IntLiteral) rsh).value);
+        } else if (operation instanceof SubtractOperation) {
+            return new ScalarLiteral(((IntLiteral) lsh).value - ((IntLiteral) rsh).value);
+        } else {
+            return new ScalarLiteral(((IntLiteral) lsh).value * ((IntLiteral) rsh).value);
         }
-        return null;
-    }
-
-    private Literal getSumAddOperation(AddOperation expression) {
-        Literal lsh = transformExpression(expression.lhs);
-        Literal rsh = transformExpression(expression.rhs);
-
-        //maak interface?
-        if (lsh instanceof ScalarLiteral) {
-            return new ScalarLiteral(((ScalarLiteral) lsh).value + ((ScalarLiteral) rsh).value);
-        } else if (lsh instanceof PixelLiteral) {
-            return new PixelLiteral(((PixelLiteral) lsh).value + ((PixelLiteral) rsh).value);
-        } else if (lsh instanceof PercentageLiteral) {
-            return new PercentageLiteral(((PercentageLiteral) lsh).value + ((PercentageLiteral) rsh).value);
-        }
-        return null;
     }
 
     private Literal getVariableValue(VariableReference variableReference) {
@@ -134,6 +119,5 @@ public class Evaluator implements Transform {
         }
         variableValues.getFirst().put(variableName, variableValue);
     }
-
 
 }
