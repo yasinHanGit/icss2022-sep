@@ -107,6 +107,16 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitAddOperation(ICSSParser.AddOperationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ICSSParser#subtractOperation}.
+	 * @param ctx the parse tree
+	 */
+	void enterSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ICSSParser#subtractOperation}.
+	 * @param ctx the parse tree
+	 */
+	void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ICSSParser#mulOperation}.
 	 * @param ctx the parse tree
 	 */

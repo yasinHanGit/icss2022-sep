@@ -84,11 +84,6 @@ public class Evaluator implements Transform {
         Literal lsh = transformExpression(operation.lhs);
         Literal rsh = transformExpression(operation.rhs);
 
-        if (rsh instanceof ScalarLiteral) {
-            var temp = lsh;
-            lsh = rsh;
-            rsh = temp;
-        }
 
         if (operation instanceof AddOperation) {
             return new ScalarLiteral(((IntLiteral) lsh).value + ((IntLiteral) rsh).value);

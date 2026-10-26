@@ -6,6 +6,7 @@ import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public class Checker {
 //            operation.setError("Invalid input: no type specified");
 //            return;
 //        }
-        if (operation instanceof AddOperation &&
+        if (operation instanceof AddOperation | operation instanceof SubtractOperation &&
                 !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs))) {
             operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " are not from the same type ");
             return;

@@ -62,13 +62,16 @@ selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
 declaration: propertyName COLON expression SEMICOLON;
 
-expression: addOperation | mulOperation | variableReference | literal;
+expression: addOperation | mulOperation | subtractOperation |variableReference | literal;
 
 styleRule: selector OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;
 
-addOperation: addOperation (PLUS | MIN) (operand | mulOperation) | (operand | mulOperation) (PLUS | MIN) (operand | mulOperation);
+addOperation: addOperation PLUS (operand | mulOperation) | (operand | mulOperation) PLUS (operand | mulOperation);
+
+subtractOperation: subtractOperation MIN (operand | mulOperation) | (operand | mulOperation) MIN (operand | mulOperation);
 
 mulOperation: mulOperation MUL operand | operand MUL operand;
+
 
 operand: literal | variableReference;
 statement: OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;

@@ -70,6 +70,12 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAddOperation(ICSSParser.AddOperationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ICSSParser#subtractOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ICSSParser#mulOperation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
