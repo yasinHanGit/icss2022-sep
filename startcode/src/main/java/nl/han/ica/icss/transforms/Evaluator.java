@@ -3,11 +3,13 @@ package nl.han.ica.icss.transforms;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
+import nl.han.ica.icss.ast.literals.BoolLiteral;
 import nl.han.ica.icss.ast.literals.PercentageLiteral;
 import nl.han.ica.icss.ast.literals.PixelLiteral;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.types.ExpressionType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,20 +40,30 @@ public class Evaluator implements Transform {
                 variableValues.removeFirst();
             }else if (node instanceof Declaration) {
                 transformExpression(((Declaration) node).expression);
-//            } else if (node instanceof IfClause) {
-//                IfClause ifClause = (IfClause) node;
-//                variableValues.addFirst(new HashMap<>());
-//                transformNodes(ifClause.body);
-//                variableValues.removeFirst();
-//                if (ifClause.elseClause != null && !boolCheck(ifClause.conditionalExpression)) {
-//                    variableValues.addFirst(new HashMap<>());
-//                    transformNodes(ifClause.elseClause.body);
-//                    variableValues.removeFirst();
-//                }
+            } else if (node instanceof IfClause) {
+                variableValues.addFirst(new HashMap<>());
+                transformIfClause((IfClause) node);
+                variableValues.removeFirst();
             }
 
         }
 
+    }
+
+    private void transformIfClause(IfClause ifClause) {
+        if (boolCheck(ifClause.conditionalExpression)){
+            transformNodes(ifClause.body);
+        } else if (ifClause.elseClause != null) {
+            transformNodes(ifClause.elseClause.body);
+        }
+    }
+    private boolean boolCheck(Expression expression) {
+        if (expression instanceof BoolLiteral) {
+          return ((BoolLiteral) expression).value;
+        }else if (expression instanceof VariableReference){
+            return boolCheck(getVariableValue((VariableReference)expression));
+        }
+        return false;
     }
 
     private Literal transformExpression(Expression expression) {
@@ -84,7 +96,6 @@ public class Evaluator implements Transform {
         } else if (rsh instanceof PercentageLiteral) {
             return new PercentageLiteral(((ScalarLiteral) lsh).value * ((PercentageLiteral) rsh).value);
         }
-
         return null;
     }
 
