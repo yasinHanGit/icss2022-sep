@@ -107,8 +107,18 @@ public class Evaluator implements Transform {
         }
         return lsh;
     }
-
-
+// TODO BUG
+//    Jan := TRUE;
+//    AdjustWidth := Jan;
+//    WidthVar := 0px;
+//    p {
+//        if [AdjustWidth] {
+//            WidthVar := 200px;
+//        } else {
+//            WidthVar := 250px;
+//        }
+//        width: WidthVar;
+//    }
     private Literal getVariableValue(VariableReference variableReference) {
         for (int i = 0; i < variableValues.getSize(); i++) {
             if (variableValues.get(i).containsKey(variableReference.name)) {

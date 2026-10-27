@@ -56,7 +56,7 @@ variableReference: CAPITAL_IDENT;
 bool: TRUE | FALSE;
 
 literal: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
-variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR (literal | variableReference) SEMICOLON;
 
 selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 

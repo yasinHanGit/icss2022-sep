@@ -103,6 +103,7 @@ public class Checker {
         if (operation.lhs instanceof Operation) operationCheck((Operation) operation.lhs);
         if (operation.rhs instanceof Operation) operationCheck((Operation) operation.rhs);
 
+
         if ((operation instanceof AddOperation || operation instanceof SubtractOperation) &&
                 !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs)) &&
                 !(operation.lhs instanceof Operation || operation.rhs instanceof Operation)) {
