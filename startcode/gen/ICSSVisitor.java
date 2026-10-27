@@ -52,35 +52,39 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ICSSParser#expression}.
+	 * Visit a parse tree produced by the {@code mulOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpression(ICSSParser.ExpressionContext ctx);
+	T visitMulOperation(ICSSParser.MulOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code addOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddOperation(ICSSParser.AddOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code subtractOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code oparator}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOparator(ICSSParser.OparatorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#styleRule}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStyleRule(ICSSParser.StyleRuleContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ICSSParser#addOperation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAddOperation(ICSSParser.AddOperationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ICSSParser#subtractOperation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ICSSParser#mulOperation}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMulOperation(ICSSParser.MulOperationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#operand}.
 	 * @param ctx the parse tree

@@ -100,25 +100,13 @@ public class ICSSBaseListener implements ICSSListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpression(ICSSParser.ExpressionContext ctx) { }
+	@Override public void enterMulOperation(ICSSParser.MulOperationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpression(ICSSParser.ExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStyleRule(ICSSParser.StyleRuleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStyleRule(ICSSParser.StyleRuleContext ctx) { }
+	@Override public void exitMulOperation(ICSSParser.MulOperationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -148,13 +136,25 @@ public class ICSSBaseListener implements ICSSListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMulOperation(ICSSParser.MulOperationContext ctx) { }
+	@Override public void enterOparator(ICSSParser.OparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMulOperation(ICSSParser.MulOperationContext ctx) { }
+	@Override public void exitOparator(ICSSParser.OparatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStyleRule(ICSSParser.StyleRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStyleRule(ICSSParser.StyleRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -77,15 +77,53 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ICSSParser#expression}.
+	 * Enter a parse tree produced by the {@code mulOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(ICSSParser.ExpressionContext ctx);
+	void enterMulOperation(ICSSParser.MulOperationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ICSSParser#expression}.
+	 * Exit a parse tree produced by the {@code mulOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(ICSSParser.ExpressionContext ctx);
+	void exitMulOperation(ICSSParser.MulOperationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code addOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddOperation(ICSSParser.AddOperationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code addOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddOperation(ICSSParser.AddOperationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code subtractOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code subtractOperation}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code oparator}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterOparator(ICSSParser.OparatorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code oparator}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitOparator(ICSSParser.OparatorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#styleRule}.
 	 * @param ctx the parse tree
@@ -96,36 +134,6 @@ public interface ICSSListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStyleRule(ICSSParser.StyleRuleContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ICSSParser#addOperation}.
-	 * @param ctx the parse tree
-	 */
-	void enterAddOperation(ICSSParser.AddOperationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ICSSParser#addOperation}.
-	 * @param ctx the parse tree
-	 */
-	void exitAddOperation(ICSSParser.AddOperationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ICSSParser#subtractOperation}.
-	 * @param ctx the parse tree
-	 */
-	void enterSubtractOperation(ICSSParser.SubtractOperationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ICSSParser#subtractOperation}.
-	 * @param ctx the parse tree
-	 */
-	void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ICSSParser#mulOperation}.
-	 * @param ctx the parse tree
-	 */
-	void enterMulOperation(ICSSParser.MulOperationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ICSSParser#mulOperation}.
-	 * @param ctx the parse tree
-	 */
-	void exitMulOperation(ICSSParser.MulOperationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#operand}.
 	 * @param ctx the parse tree
