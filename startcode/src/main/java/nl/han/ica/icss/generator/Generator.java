@@ -2,8 +2,7 @@ package nl.han.ica.icss.generator;
 
 
 import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.BoolLiteral;
-import nl.han.ica.icss.ast.literals.ColorLiteral;
+import nl.han.ica.icss.ast.literals.*;
 
 import java.util.ArrayList;
 
@@ -23,25 +22,10 @@ public class Generator {
 				generateStyleRule((StyleRule) node);
             } else if (node instanceof Declaration) {
                 generateDeclaration((Declaration) node);
-            } else if (node instanceof VariableAssignment) {
-				generateVariableAssignment((VariableAssignment) node);
-                cssBuilder.append(((VariableAssignment) node).name.name).append(": ");
-                var expression = ((VariableAssignment) node).expression;
-                if (expression instanceof IntLiteral) {
-                    cssBuilder.append(((IntLiteral) expression).value).append(";\n");
-                } else if (expression instanceof BoolLiteral) {
-                    cssBuilder.append(((BoolLiteral) expression).value).append(";\n");
-                } else if (expression instanceof ColorLiteral) {
-                    cssBuilder.append(((ColorLiteral) expression).value).append(";\n");
-                }
 
             }
         }
     }
-
-	private void generateVariableAssignment(VariableAssignment node) {
-
-	}
 
 	private void generateStyleRule(StyleRule styleRule) {
 		cssBuilder.append(styleRule.selectors.get(0)).append(" {\n");
@@ -52,15 +36,23 @@ public class Generator {
 	}
 
 	private void generateDeclaration(Declaration declaration) {
-        cssBuilder.append(((Declaration) declaration).property.name).append(": ");
+        cssBuilder.append(declaration.property.name).append(": ");
 
-        if (declaration.expression instanceof IntLiteral) {
+        if (declaration.expression instanceof PixelLiteral) {
+            cssBuilder.append(((PixelLiteral) declaration.expression).value).append("px;\n");
+        } else if (declaration.expression instanceof PercentageLiteral) {
+            cssBuilder.append(((PercentageLiteral) declaration.expression).value).append("%;\n");
+        } else if (declaration.expression instanceof ColorLiteral) {
+            cssBuilder.append(((ColorLiteral) declaration.expression).value).append(";\n");
+        } else if (declaration.expression instanceof BoolLiteral) {
+            cssBuilder.append(((BoolLiteral) declaration.expression).value).append(";\n");
+        } else {
             cssBuilder.append(((IntLiteral) declaration.expression).value).append(";\n");
         }
     }
 
     public void addIndent() {
-        cssBuilder.append(" ".repeat(Math.max(0, tab)));
+        cssBuilder.append("  ".repeat(Math.max(0, tab)));
     }
 
     public void increaseIdent() {

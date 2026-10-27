@@ -643,36 +643,36 @@ public class ICSSParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
-						_localctx = new AddOperationContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new MulOperationContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(56);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(57);
-						match(PLUS);
+						match(MUL);
 						setState(58);
 						expression(4);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new SubtractOperationContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new AddOperationContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(59);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(60);
-						match(MIN);
+						match(PLUS);
 						setState(61);
 						expression(3);
 						}
 						break;
 					case 3:
 						{
-						_localctx = new MulOperationContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new SubtractOperationContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(62);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
 						setState(63);
-						match(MUL);
+						match(MIN);
 						setState(64);
 						expression(2);
 						}
@@ -1254,9 +1254,9 @@ public class ICSSParser extends Parser {
 		"01\u0003\u0000\u0000\u000012\u0005\u0017\u0000\u000023\u0003\u000e\u0007"+
 		"\u000034\u0005\u0016\u0000\u00004\r\u0001\u0000\u0000\u000056\u0006\u0007"+
 		"\uffff\uffff\u000067\u0003\u0012\t\u00007C\u0001\u0000\u0000\u000089\n"+
-		"\u0003\u0000\u00009:\u0005\u0018\u0000\u0000:B\u0003\u000e\u0007\u0004"+
-		";<\n\u0002\u0000\u0000<=\u0005\u0019\u0000\u0000=B\u0003\u000e\u0007\u0003"+
-		">?\n\u0001\u0000\u0000?@\u0005\u001a\u0000\u0000@B\u0003\u000e\u0007\u0002"+
+		"\u0003\u0000\u00009:\u0005\u001a\u0000\u0000:B\u0003\u000e\u0007\u0004"+
+		";<\n\u0002\u0000\u0000<=\u0005\u0018\u0000\u0000=B\u0003\u000e\u0007\u0003"+
+		">?\n\u0001\u0000\u0000?@\u0005\u0019\u0000\u0000@B\u0003\u000e\u0007\u0002"+
 		"A8\u0001\u0000\u0000\u0000A;\u0001\u0000\u0000\u0000A>\u0001\u0000\u0000"+
 		"\u0000BE\u0001\u0000\u0000\u0000CA\u0001\u0000\u0000\u0000CD\u0001\u0000"+
 		"\u0000\u0000D\u000f\u0001\u0000\u0000\u0000EC\u0001\u0000\u0000\u0000"+

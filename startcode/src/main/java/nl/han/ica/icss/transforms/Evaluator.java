@@ -11,10 +11,13 @@ import nl.han.ica.icss.ast.operations.SubtractOperation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 public class Evaluator implements Transform {
 
     private IHANLinkedList<HashMap<String, Literal>> variableValues;
+    private ASTNode childNode;
+
 
     public Evaluator() {
         variableValues = new HANLinkedList<>();
@@ -25,13 +28,15 @@ public class Evaluator implements Transform {
         variableValues = new HANLinkedList<>();
         variableValues.addFirst(new HashMap<>());
         transformNodes(ast.root.getChildren());
-
     }
 
     private void transformNodes(ArrayList<ASTNode> nodes) {
-        for (ASTNode node : nodes) {
+        ListIterator<ASTNode> iterator = nodes.listIterator();
+        while (iterator.hasNext()) {
+            ASTNode node = iterator.next();
             if (node instanceof VariableAssignment) {
                 assignVariable((VariableAssignment) node);
+                iterator.remove();
             } else if (node instanceof StyleRule) {
                 variableValues.addFirst(new HashMap<>());
                 transformNodes(((StyleRule) node).body);
@@ -42,19 +47,23 @@ public class Evaluator implements Transform {
                 variableValues.addFirst(new HashMap<>());
                 transformIfClause((IfClause) node);
                 variableValues.removeFirst();
+                iterator.remove();
+                if (childNode != null) iterator.add(childNode);
+                childNode = null;
             }
-
         }
-
     }
+
 
     private void transformIfClause(IfClause ifClause) {
         if (boolCheck(ifClause.conditionalExpression)){
+            System.out.println(ifClause.body);
             transformNodes(ifClause.body);
         } else if (ifClause.elseClause != null) {
             transformNodes(ifClause.elseClause.body);
         }
     }
+
     private boolean boolCheck(Expression expression) {
         if (expression instanceof BoolLiteral) {
           return ((BoolLiteral) expression).value;
@@ -66,6 +75,7 @@ public class Evaluator implements Transform {
 
     private void transformDeclaration(Declaration declaration){
         declaration.expression = transformExpression(declaration.expression);
+        childNode = declaration;
     }
 
     private Literal transformExpression(Expression expression) {
@@ -80,15 +90,20 @@ public class Evaluator implements Transform {
 
 
     private Literal getSumOperation(Operation operation) {
-        Literal lsh = transformExpression(operation.lhs);
-        Literal rsh = transformExpression(operation.rhs);
+        IntLiteral lsh = (IntLiteral) transformExpression(operation.lhs);
+        IntLiteral rsh = (IntLiteral) transformExpression(operation.rhs);
 
         if (operation instanceof AddOperation) {
-            ((IntLiteral) lsh).value = ((IntLiteral) lsh).value + ((IntLiteral) rsh).value;
+            lsh.value = lsh.value + rsh.value;
         } else if (operation instanceof SubtractOperation) {
-            ((IntLiteral) lsh).value =((IntLiteral) lsh).value - ((IntLiteral) rsh).value;
+            lsh.value = lsh.value - rsh.value;
         } else {
-            ((IntLiteral) lsh).value =((IntLiteral) lsh).value * ((IntLiteral) rsh).value;
+            if (lsh instanceof ScalarLiteral ) { //keep the right literal type
+                var temp = lsh;
+                lsh = rsh;
+                rsh = temp;
+            }
+            lsh.value = lsh.value * rsh.value;
         }
         return lsh;
     }

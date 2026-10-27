@@ -64,9 +64,9 @@ declaration: propertyName COLON expression SEMICOLON;
 
 expression:
            operand                                  #oparator
+           |    expression MUL  expression          #mulOperation
            |    expression PLUS expression          #addOperation
-           |    expression MIN  expression          #subtractOperation
-           |    expression MUL  expression          #mulOperation;
+           |    expression MIN  expression          #subtractOperation;
 
 styleRule: selector OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;
 

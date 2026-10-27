@@ -62,11 +62,6 @@ public class Checker {
         var variableName = variableAssignment.name.name;
         var expressionType = getExpressionType(variableAssignment.expression);
 
-        if (variableName.equals("TRUE") || variableName.equals("FALSE") ||
-                variableName.equals("ONVOLDOENDE")) {
-            variableAssignment.setError("Invalid value: " + variableName);
-            return;
-        }
         for (int i = 0; i < variableTypes.getSize(); i++) {
             if (variableTypes.get(i).containsKey(variableName)) {
                 variableTypes.get(i).put(variableName, expressionType);
@@ -85,7 +80,7 @@ public class Checker {
 
         if (declaration.expression instanceof Operation) {
             if (propertyName.equals("color") || propertyName.equals("background-color")) {
-                declaration.setError("Invalid value: operations on " + propertyName + " are not possible");
+                declaration.setError("Invalid value: Operations on " + propertyName + " are not possible");
                 return;
             }
             operationCheck((Operation) declaration.expression);
@@ -105,17 +100,18 @@ public class Checker {
                 return;
             }
         }
-//        if (operation.lhs instanceof ScalarLiteral && operation.rhs instanceof ScalarLiteral) {
-//            operation.setError("Invalid input: no type specified");
-//            return;
-//        }
-        if (operation instanceof AddOperation | operation instanceof SubtractOperation &&
-                !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs))) {
+        if (operation.lhs instanceof Operation) operationCheck((Operation) operation.lhs);
+        if (operation.rhs instanceof Operation) operationCheck((Operation) operation.rhs);
+
+        if ((operation instanceof AddOperation || operation instanceof SubtractOperation) &&
+                !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs)) &&
+                !(operation.lhs instanceof Operation || operation.rhs instanceof Operation)) {
             operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " are not from the same type ");
             return;
         }
         if (operation instanceof MultiplyOperation &&
-                !(operation.lhs instanceof ScalarLiteral || operation.rhs instanceof ScalarLiteral)) {
+                !(operation.lhs instanceof ScalarLiteral || operation.rhs instanceof ScalarLiteral) &&
+                !(operation.lhs instanceof Operation || operation.rhs instanceof Operation)) {
             operation.setError("Invalid input: " + operation.lhs + " & " + operation.rhs + " can not be multiplied ");
         }
     }
