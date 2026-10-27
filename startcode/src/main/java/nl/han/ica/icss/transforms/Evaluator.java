@@ -32,12 +32,12 @@ public class Evaluator implements Transform {
         for (ASTNode node : nodes) {
             if (node instanceof VariableAssignment) {
                 assignVariable((VariableAssignment) node);
-            } else if (node instanceof Stylerule) {
+            } else if (node instanceof StyleRule) {
                 variableValues.addFirst(new HashMap<>());
-                transformNodes(((Stylerule) node).body);
+                transformNodes(((StyleRule) node).body);
                 variableValues.removeFirst();
             }else if (node instanceof Declaration) {
-                transformExpression(((Declaration) node).expression);
+                transformDeclaration((Declaration) node);
             } else if (node instanceof IfClause) {
                 variableValues.addFirst(new HashMap<>());
                 transformIfClause((IfClause) node);
@@ -64,18 +64,17 @@ public class Evaluator implements Transform {
         return false;
     }
 
-    private Literal transformExpression(Expression expression) {
+    private void transformDeclaration(Declaration declaration){
+        declaration.expression = transformExpression(declaration.expression);
+    }
 
+    private Literal transformExpression(Expression expression) {
         if (expression instanceof VariableReference) {
             expression = getVariableValue((VariableReference) expression);
-        } else if (expression instanceof AddOperation) {
-            expression = getSumOperation((AddOperation) expression);
-        }else if (expression instanceof SubtractOperation) {
-            expression = getSumOperation((SubtractOperation) expression);
-        } else if (expression instanceof MultiplyOperation) {
-            expression = getSumOperation((MultiplyOperation) expression);
+        } else if (expression instanceof AddOperation | expression instanceof SubtractOperation
+                | expression instanceof MultiplyOperation) {
+            expression = getSumOperation((Operation) expression);
         }
-        System.out.println(expression);
         return (Literal) expression;
     }
 
@@ -84,15 +83,16 @@ public class Evaluator implements Transform {
         Literal lsh = transformExpression(operation.lhs);
         Literal rsh = transformExpression(operation.rhs);
 
-
         if (operation instanceof AddOperation) {
-            return new ScalarLiteral(((IntLiteral) lsh).value + ((IntLiteral) rsh).value);
+            ((IntLiteral) lsh).value = ((IntLiteral) lsh).value + ((IntLiteral) rsh).value;
         } else if (operation instanceof SubtractOperation) {
-            return new ScalarLiteral(((IntLiteral) lsh).value - ((IntLiteral) rsh).value);
+            ((IntLiteral) lsh).value =((IntLiteral) lsh).value - ((IntLiteral) rsh).value;
         } else {
-            return new ScalarLiteral(((IntLiteral) lsh).value * ((IntLiteral) rsh).value);
+            ((IntLiteral) lsh).value =((IntLiteral) lsh).value * ((IntLiteral) rsh).value;
         }
+        return lsh;
     }
+
 
     private Literal getVariableValue(VariableReference variableReference) {
         for (int i = 0; i < variableValues.getSize(); i++) {

@@ -28,9 +28,9 @@ public class Checker {
                 assignVariable((VariableAssignment) node);
             } else if (node instanceof Declaration) {
                 checkDeclaration((Declaration) node);
-            } else if (node instanceof Stylerule) {
+            } else if (node instanceof StyleRule) {
                 variableTypes.addFirst(new HashMap<>());
-                checkNodes(((Stylerule) node).body);
+                checkNodes(((StyleRule) node).body);
                 variableTypes.removeFirst();
             } else if (node instanceof IfClause) {
                 IfClause ifClause = (IfClause) node;

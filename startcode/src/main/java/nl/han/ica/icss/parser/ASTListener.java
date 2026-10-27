@@ -1,11 +1,7 @@
 package nl.han.ica.icss.parser;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 
 import nl.han.ica.datastructures.HANStack;
-import nl.han.ica.icss.parser.ICSSBaseListener;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
@@ -72,12 +68,12 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
     public void enterStyleRule(ICSSParser.StyleRuleContext ctx) {
-        currentContainer.push(new Stylerule());
+        currentContainer.push(new StyleRule());
     }
 
     @Override
     public void exitStyleRule(ICSSParser.StyleRuleContext ctx) {
-        Stylerule styleRule = (Stylerule) currentContainer.pop();
+        StyleRule styleRule = (StyleRule) currentContainer.pop();
         currentContainer.peek().addChild(styleRule);
     }
 
