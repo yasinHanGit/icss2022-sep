@@ -1,7 +1,6 @@
 package nl.han.ica.icss.transforms;
 
 import nl.han.ica.datastructures.HANLinkedList;
-import nl.han.ica.datastructures.HANQueue;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
@@ -21,8 +20,6 @@ import java.util.ListIterator;
 public class Evaluator implements Transform {
 
     private IHANLinkedList<HashMap<String, Literal>> variableValues;
-    private HANQueue<ASTNode> childNode;
-
 
     public Evaluator() {
         variableValues = new HANLinkedList<>();
@@ -30,7 +27,6 @@ public class Evaluator implements Transform {
 
     @Override
     public void apply(AST ast) {
-        childNode = new HANQueue<>();
         variableValues = new HANLinkedList<>();
         variableValues.addFirst(new HashMap<>());
         transformNodes(ast.root.getChildren());
@@ -50,22 +46,30 @@ public class Evaluator implements Transform {
             } else if (node instanceof Declaration) {
                 transformDeclaration((Declaration) node);
             } else if (node instanceof IfClause) {
+                IfClause ifClause = (IfClause) node;
                 variableValues.addFirst(new HashMap<>());
-                transformIfClause((IfClause) node);
+                ArrayList<ASTNode> selectedBody = transformIfClause(ifClause);
                 variableValues.removeFirst();
                 iterator.remove();
-                while (!childNode.isEmpty()) iterator.add(childNode.dequeue());
+                for (ASTNode child : selectedBody) {
+                    iterator.add(child);
+                }
             }
         }
     }
 
 
-    private void transformIfClause(IfClause ifClause) {
+    private ArrayList<ASTNode> transformIfClause(IfClause ifClause) {
+        ArrayList<ASTNode> selectedBody;
         if (boolCheck(ifClause.conditionalExpression)) {
-            transformNodes(ifClause.body);
+            selectedBody = ifClause.body;
         } else if (ifClause.elseClause != null) {
-            transformNodes(ifClause.elseClause.body);
+            selectedBody = ifClause.elseClause.body;
+        } else {
+            selectedBody = new ArrayList<>();
         }
+        transformNodes(selectedBody);
+        return selectedBody;
     }
 
     private boolean boolCheck(Expression expression) {
@@ -81,7 +85,6 @@ public class Evaluator implements Transform {
 
     private void transformDeclaration(Declaration declaration) {
         declaration.expression = transformExpression(declaration.expression);
-        childNode.enqueue(declaration);
     }
 
     private Literal transformExpression(Expression expression) {
