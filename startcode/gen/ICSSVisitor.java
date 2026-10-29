@@ -52,6 +52,13 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code op}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOp(ICSSParser.OpContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code mulOperation}
 	 * labeled alternative in {@link ICSSParser#expression}.
 	 * @param ctx the parse tree
@@ -72,13 +79,6 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code oparator}
-	 * labeled alternative in {@link ICSSParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOparator(ICSSParser.OparatorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#styleRule}.
 	 * @param ctx the parse tree
@@ -109,6 +109,34 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitElseClause(ICSSParser.ElseClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code smallerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSmallerBool(ICSSParser.SmallerBoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code biggerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBiggerBool(ICSSParser.BiggerBoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code equalBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualBool(ICSSParser.EqualBoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code notEqualBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotEqualBool(ICSSParser.NotEqualBoolContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#stylesheet}.
 	 * @param ctx the parse tree

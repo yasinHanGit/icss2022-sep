@@ -77,6 +77,18 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code op}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterOp(ICSSParser.OpContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code op}
+	 * labeled alternative in {@link ICSSParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitOp(ICSSParser.OpContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code mulOperation}
 	 * labeled alternative in {@link ICSSParser#expression}.
 	 * @param ctx the parse tree
@@ -112,18 +124,6 @@ public interface ICSSListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code oparator}
-	 * labeled alternative in {@link ICSSParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterOparator(ICSSParser.OparatorContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code oparator}
-	 * labeled alternative in {@link ICSSParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitOparator(ICSSParser.OparatorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#styleRule}.
 	 * @param ctx the parse tree
@@ -174,6 +174,54 @@ public interface ICSSListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitElseClause(ICSSParser.ElseClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code smallerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void enterSmallerBool(ICSSParser.SmallerBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code smallerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void exitSmallerBool(ICSSParser.SmallerBoolContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code biggerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void enterBiggerBool(ICSSParser.BiggerBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code biggerBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void exitBiggerBool(ICSSParser.BiggerBoolContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code equalBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqualBool(ICSSParser.EqualBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code equalBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqualBool(ICSSParser.EqualBoolContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code notEqualBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotEqualBool(ICSSParser.NotEqualBoolContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code notEqualBool}
+	 * labeled alternative in {@link ICSSParser#boolOperation}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotEqualBool(ICSSParser.NotEqualBoolContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#stylesheet}.
 	 * @param ctx the parse tree

@@ -25,6 +25,10 @@ PLUS=24
 MIN=25
 MUL=26
 ASSIGNMENT_OPERATOR=27
+SMALLER=28
+BIGGER=29
+EQUAL=30
+NOTEQUAL=31
 'background-color'=1
 'color'=2
 'width'=3
@@ -43,3 +47,7 @@ ASSIGNMENT_OPERATOR=27
 '-'=25
 '*'=26
 ':='=27
+'<'=28
+'>'=29
+'=='=30
+'!='=31

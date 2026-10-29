@@ -43,11 +43,16 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
-
+SMALLER: '<';
+BIGGER: '>';
+EQUAL: '==';
+NOTEQUAL: '!=';
 
 
 
 //--- PARSER: ---
+
+
 
 
 propertyName: 'background-color' | 'color' | 'width' | 'height';
@@ -56,14 +61,14 @@ variableReference: CAPITAL_IDENT;
 bool: TRUE | FALSE;
 
 literal: PIXELSIZE | PERCENTAGE | COLOR | bool | SCALAR;
-variableAssignment: variableReference ASSIGNMENT_OPERATOR (literal | variableReference) SEMICOLON;
+variableAssignment: variableReference ASSIGNMENT_OPERATOR (expression | boolOperation) SEMICOLON;
 
 selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
 declaration: propertyName COLON expression SEMICOLON;
 
 expression:
-           operand                                  #oparator
+           operand                                  #op
            |    expression MUL  expression          #mulOperation
            |    expression PLUS expression          #addOperation
            |    expression MIN  expression          #subtractOperation;
@@ -72,7 +77,16 @@ styleRule: selector OPEN_BRACE (declaration | ifClause | variableAssignment)+ CL
 
 operand: literal | variableReference;
 statement: OPEN_BRACE (declaration | ifClause | variableAssignment)+ CLOSE_BRACE;
-ifClause: IF BOX_BRACKET_OPEN (variableReference | bool) BOX_BRACKET_CLOSE statement elseClause?;
+ifClause: IF BOX_BRACKET_OPEN (variableReference | bool | boolOperation) BOX_BRACKET_CLOSE statement elseClause?;
 elseClause: ELSE statement;
+
+
+boolOperation:
+                (literal | variableReference) SMALLER (literal | variableReference)     #smallerBool
+                | (literal | variableReference) BIGGER (literal | variableReference)    #biggerBool
+                | (literal | variableReference) EQUAL (literal | variableReference)     #equalBool
+                | (literal | variableReference) NOTEQUAL (literal | variableReference)  #notEqualBool;
+
+
 
 stylesheet: variableAssignment* styleRule* ;

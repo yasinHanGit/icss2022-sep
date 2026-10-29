@@ -86,10 +86,11 @@ public class Checker {
             operationCheck((Operation) declaration.expression);
         } else if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
                 !(expressionType.equals(ExpressionType.COLOR))) {
-            declaration.setError("Invalid value: " + declaration.expression);
+            declaration.setError("Invalid value: 1" + declaration.expression);
         } else if ((propertyName.equals("width") || propertyName.equals("height")) &&
                 (!(expressionType.equals(ExpressionType.PIXEL) || expressionType.equals(ExpressionType.PERCENTAGE)))) {
-            declaration.setError("Invalid value: " + declaration.expression);
+            if (!(declaration.expression instanceof VariableReference))
+                declaration.setError("Invalid value: 2" + declaration.expression);
         }
     }
 
@@ -100,10 +101,22 @@ public class Checker {
                 return;
             }
         }
+        if (operation.lhs instanceof VariableReference) getVariableExpression(operation.lhs);
+        if (operation.rhs instanceof VariableReference) getVariableExpression(operation.rhs);
+
         if (operation.lhs instanceof Operation) operationCheck((Operation) operation.lhs);
         if (operation.rhs instanceof Operation) operationCheck((Operation) operation.rhs);
 
-
+        if (operation instanceof BoolOperation ){
+            if (!(operation.lhs instanceof ScalarLiteral | operation.lhs instanceof VariableReference)) {
+                    operation.setError("Invalid input: " + operation.lhs + " are not from the same type ");
+                    return;
+                }
+                if (!(operation.rhs instanceof ScalarLiteral | operation.rhs instanceof VariableReference)) {
+                    operation.setError("Invalid input: " + operation.rhs + " are not from the same type ");
+                    return;
+                }
+            }
         if ((operation instanceof AddOperation || operation instanceof SubtractOperation) &&
                 !getExpressionType(operation.lhs).equals(getExpressionType(operation.rhs)) &&
                 !(operation.lhs instanceof Operation || operation.rhs instanceof Operation)) {
@@ -120,6 +133,8 @@ public class Checker {
     private ExpressionType getExpressionType(Expression expression) {
         if (expression instanceof VariableReference) {
             return getVariableExpression(expression);
+        } else if (expression instanceof BoolOperation) {
+            return ExpressionType.BOOL;
         } else if (expression instanceof BoolLiteral) {
             return ExpressionType.BOOL;
         } else if (expression instanceof ScalarLiteral) {

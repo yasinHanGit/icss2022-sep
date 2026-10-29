@@ -27,6 +27,7 @@ public class BoolLiteral extends Literal {
         return value == that.value;
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(value);

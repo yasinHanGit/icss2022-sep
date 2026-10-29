@@ -8,6 +8,10 @@ import nl.han.ica.icss.ast.literals.*;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.ast.operations.boolOperations.BiggerBool;
+import nl.han.ica.icss.ast.operations.boolOperations.EqualBool;
+import nl.han.ica.icss.ast.operations.boolOperations.NotEqualBool;
+import nl.han.ica.icss.ast.operations.boolOperations.SmallerBool;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -118,7 +122,50 @@ public class ASTListener extends ICSSBaseListener {
 		currentContainer.peek().addChild(propertyName);
 	}
 
+    @Override
+    public void enterSmallerBool(ICSSParser.SmallerBoolContext ctx) {
+        currentContainer.push(new SmallerBool());
+    }
 
+    @Override
+    public void exitSmallerBool(ICSSParser.SmallerBoolContext ctx) {
+        SmallerBool smallerBool = (SmallerBool) currentContainer.pop();
+        currentContainer.peek().addChild(smallerBool);
+    }
+
+    @Override
+    public void enterBiggerBool(ICSSParser.BiggerBoolContext ctx) {
+        currentContainer.push(new BiggerBool());
+    }
+
+    @Override
+    public void exitBiggerBool(ICSSParser.BiggerBoolContext ctx) {
+        BiggerBool biggerBool = (BiggerBool) currentContainer.pop();
+        currentContainer.peek().addChild(biggerBool);
+    }
+
+
+    @Override
+    public void enterEqualBool(ICSSParser.EqualBoolContext ctx) {
+        currentContainer.push(new EqualBool());
+    }
+
+    @Override
+    public void exitEqualBool(ICSSParser.EqualBoolContext ctx) {
+        EqualBool equalBool = (EqualBool) currentContainer.pop();
+        currentContainer.peek().addChild(equalBool);
+    }
+
+    @Override
+    public void enterNotEqualBool(ICSSParser.NotEqualBoolContext ctx) {
+        currentContainer.push(new NotEqualBool());
+    }
+
+    @Override
+    public void exitNotEqualBool(ICSSParser.NotEqualBoolContext ctx) {
+        NotEqualBool notEqualBool = (NotEqualBool) currentContainer.pop();
+        currentContainer.peek().addChild(notEqualBool);
+    }
 
     @Override
     public void enterAddOperation(ICSSParser.AddOperationContext ctx) {
@@ -152,6 +199,8 @@ public class ASTListener extends ICSSBaseListener {
         MultiplyOperation multiplyOperation = (MultiplyOperation) currentContainer.pop();
         currentContainer.peek().addChild(multiplyOperation);
     }
+
+
 
     @Override
     public void enterLiteral(ICSSParser.LiteralContext ctx) {

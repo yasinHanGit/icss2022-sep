@@ -8,6 +8,10 @@ import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.AddOperation;
 import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
+import nl.han.ica.icss.ast.operations.boolOperations.BiggerBool;
+import nl.han.ica.icss.ast.operations.boolOperations.EqualBool;
+import nl.han.ica.icss.ast.operations.boolOperations.NotEqualBool;
+import nl.han.ica.icss.ast.operations.boolOperations.SmallerBool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +45,7 @@ public class Evaluator implements Transform {
                 variableValues.addFirst(new HashMap<>());
                 transformNodes(((StyleRule) node).body);
                 variableValues.removeFirst();
-            }else if (node instanceof Declaration) {
+            } else if (node instanceof Declaration) {
                 transformDeclaration((Declaration) node);
             } else if (node instanceof IfClause) {
                 variableValues.addFirst(new HashMap<>());
@@ -56,8 +60,7 @@ public class Evaluator implements Transform {
 
 
     private void transformIfClause(IfClause ifClause) {
-        if (boolCheck(ifClause.conditionalExpression)){
-            System.out.println(ifClause.body);
+        if (boolCheck(ifClause.conditionalExpression)) {
             transformNodes(ifClause.body);
         } else if (ifClause.elseClause != null) {
             transformNodes(ifClause.elseClause.body);
@@ -66,14 +69,16 @@ public class Evaluator implements Transform {
 
     private boolean boolCheck(Expression expression) {
         if (expression instanceof BoolLiteral) {
-          return ((BoolLiteral) expression).value;
-        }else if (expression instanceof VariableReference){
-            return boolCheck(getVariableValue((VariableReference)expression));
+            return ((BoolLiteral) expression).value;
+        } else if (expression instanceof VariableReference) {
+            return boolCheck(getVariableValue((VariableReference) expression));
+        } else if (expression instanceof BoolOperation) {
+            return transformBoolOperation((BoolOperation) expression).value;
         }
         return false;
     }
 
-    private void transformDeclaration(Declaration declaration){
+    private void transformDeclaration(Declaration declaration) {
         declaration.expression = transformExpression(declaration.expression);
         childNode = declaration;
     }
@@ -84,8 +89,25 @@ public class Evaluator implements Transform {
         } else if (expression instanceof AddOperation | expression instanceof SubtractOperation
                 | expression instanceof MultiplyOperation) {
             expression = getSumOperation((Operation) expression);
+        } else if (expression instanceof BoolOperation) {
+            expression = transformBoolOperation((BoolOperation) expression);
         }
         return (Literal) expression;
+    }
+
+    private BoolLiteral transformBoolOperation(BoolOperation operation) {
+        IntLiteral lsh = (IntLiteral) transformExpression(operation.lhs);
+        IntLiteral rsh = (IntLiteral) transformExpression(operation.rhs);
+
+        if (operation instanceof SmallerBool) {
+            return (new BoolLiteral(lsh.value < rsh.value));
+        } else if (operation instanceof BiggerBool) {
+            return (new BoolLiteral(lsh.value > rsh.value));
+        } else if (operation instanceof EqualBool) {
+            return (new BoolLiteral(lsh.value == rsh.value));
+        } else {
+            return (new BoolLiteral(lsh.value != rsh.value));
+        }
     }
 
 
@@ -97,8 +119,8 @@ public class Evaluator implements Transform {
             lsh.value = lsh.value + rsh.value;
         } else if (operation instanceof SubtractOperation) {
             lsh.value = lsh.value - rsh.value;
-        } else {
-            if (lsh instanceof ScalarLiteral ) { //keep the right literal type
+        } else if (operation instanceof MultiplyOperation) {
+            if (lsh instanceof ScalarLiteral) { //keep the right literal type
                 var temp = lsh;
                 lsh = rsh;
                 rsh = temp;
