@@ -1,6 +1,7 @@
 package nl.han.ica.icss.transforms;
 
 import nl.han.ica.datastructures.HANLinkedList;
+import nl.han.ica.datastructures.HANQueue;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
@@ -20,7 +21,7 @@ import java.util.ListIterator;
 public class Evaluator implements Transform {
 
     private IHANLinkedList<HashMap<String, Literal>> variableValues;
-    private ASTNode childNode;
+    private HANQueue<ASTNode> childNode;
 
 
     public Evaluator() {
@@ -29,6 +30,7 @@ public class Evaluator implements Transform {
 
     @Override
     public void apply(AST ast) {
+        childNode = new HANQueue<>();
         variableValues = new HANLinkedList<>();
         variableValues.addFirst(new HashMap<>());
         transformNodes(ast.root.getChildren());
@@ -52,8 +54,7 @@ public class Evaluator implements Transform {
                 transformIfClause((IfClause) node);
                 variableValues.removeFirst();
                 iterator.remove();
-                if (childNode != null) iterator.add(childNode);
-                childNode = null;
+                while (!childNode.isEmpty()) iterator.add(childNode.dequeue());
             }
         }
     }
@@ -80,7 +81,7 @@ public class Evaluator implements Transform {
 
     private void transformDeclaration(Declaration declaration) {
         declaration.expression = transformExpression(declaration.expression);
-        childNode = declaration;
+        childNode.enqueue(declaration);
     }
 
     private Literal transformExpression(Expression expression) {

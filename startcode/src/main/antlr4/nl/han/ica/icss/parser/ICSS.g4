@@ -68,7 +68,8 @@ selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 declaration: propertyName COLON expression SEMICOLON;
 
 expression:
-           operand                                  #op
+                operand                             #op
+           |    boolOperation                       #bo
            |    expression MUL  expression          #mulOperation
            |    expression PLUS expression          #addOperation
            |    expression MIN  expression          #subtractOperation;

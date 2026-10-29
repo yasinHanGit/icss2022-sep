@@ -86,11 +86,11 @@ public class Checker {
             operationCheck((Operation) declaration.expression);
         } else if ((propertyName.equals("color") || propertyName.equals("background-color")) &&
                 !(expressionType.equals(ExpressionType.COLOR))) {
-            declaration.setError("Invalid value: 1" + declaration.expression);
+            declaration.setError("Invalid value: " + declaration.expression);
         } else if ((propertyName.equals("width") || propertyName.equals("height")) &&
                 (!(expressionType.equals(ExpressionType.PIXEL) || expressionType.equals(ExpressionType.PERCENTAGE)))) {
             if (!(declaration.expression instanceof VariableReference))
-                declaration.setError("Invalid value: 2" + declaration.expression);
+                declaration.setError("Invalid value: " + declaration.expression);
         }
     }
 
