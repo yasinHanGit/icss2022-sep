@@ -61,6 +61,7 @@ public class Checker {
     private void assignVariable(VariableAssignment variableAssignment) {
         var variableName = variableAssignment.name.name;
         var expressionType = getExpressionType(variableAssignment.expression);
+        System.out.println(expressionType);
 
         for (int i = 0; i < variableTypes.getSize(); i++) {
             if (variableTypes.get(i).containsKey(variableName)) {
@@ -135,6 +136,9 @@ public class Checker {
             return getVariableExpression(expression);
         } else if (expression instanceof BoolOperation) {
             return ExpressionType.BOOL;
+        }else if (expression instanceof Operation) {
+            operationCheck((Operation) expression);
+            return ExpressionType.UNDEFINED;
         } else if (expression instanceof BoolLiteral) {
             return ExpressionType.BOOL;
         } else if (expression instanceof ScalarLiteral) {
