@@ -61,7 +61,6 @@ public class Checker {
     private void assignVariable(VariableAssignment variableAssignment) {
         var variableName = variableAssignment.name.name;
         var expressionType = getExpressionType(variableAssignment.expression);
-        System.out.println(expressionType);
 
         for (int i = 0; i < variableTypes.getSize(); i++) {
             if (variableTypes.get(i).containsKey(variableName)) {
